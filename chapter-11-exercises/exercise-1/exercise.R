@@ -1,5 +1,12 @@
 # Exercise 1: working with data frames (review)
 
+
+
+# LOOK HERE: when I tried to view vehicles I got an error saying that the 
+# object 'vehicles' cannot be found
+
+
+
 # Install devtools package: allows installations from GitHub
 install.packages("devtools")
 
