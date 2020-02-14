@@ -3,6 +3,7 @@
 # Install and load the `ggplot2` package
 #install.packages('ggplot2')
 library("ggplot2")
+library("dplyr")
 
 # For this exercise you will again be working with the `diamonds` data set.
 # Use `?diamonds` to review details about this data set
@@ -12,52 +13,104 @@ library("ggplot2")
 
 # Draw a column (bar) chart of diamonds cuts by price, with each bar filled by 
 # clarity. You should see a _stacked_ bar chart.
-
+cuts_by_price <- ggplot(diamonds) +
+  geom_col(
+    mapping = aes(x = cut, y = price, color = clarity)
+    )
+# print(cuts_by_price)
 
 # Draw the same chart again, but with each element positioned to "fill" the y axis
-
+cuts_by_price2 <- ggplot(diamonds) +
+  geom_col(
+    mapping = aes(x = cut, y = price, fill = clarity), position = "fill"
+    )
+# print(cuts_by_price2)
 
 # Draw the same chart again, but with each element positioned to "dodge" each other
-
+cuts_by_price3 <- ggplot(diamonds) +
+  geom_col(
+    mapping = aes(x = cut, y = price, fill = clarity), position = "dodge"
+    )
+# print(cuts_by_price3)
 
 # Draw a plot with point geometry with the x-position mapped to `cut` and the 
 # y-position mapped to `clarity`
 # This creates a "grid" grouping the points
+cut_clarity <- ggplot(diamonds) +
+  geom_point(
+    mapping = aes(x = cut, y = clarity)
+    )
 
+# print(cut_clarity)
 
 # Use the "jitter" position adjustment to keep the points from all overlapping!
 # (This works a little better with a sample of diamond data, such as from the 
 # previous exercise).
+cut_clarity_j <- ggplot(diamonds) +
+  geom_point(
+    mapping = aes(x = cut, y = clarity), position = "jitter"
+  )
 
+# print(cut_clarity_j)
 
 
 ## Scales
 
 # Draw a "boxplot" (with `geom_boxplot`) for the diamond's price (y) by color (x)
+price_color <- ggplot(diamonds) +
+  geom_boxplot(
+    mapping = aes(x = color, y = price)
+  )
 
+# print(price_color)
 
 # This has a lot of outliers, making it harder to read. To fix this, draw the 
 # same plot but with a _logarithmic_ scale for the y axis.
+price_color_log <- ggplot(diamonds) +
+  geom_boxplot(
+    mapping = aes(x = color, y = price) 
+  ) + scale_y_log10()
 
+# print(price_color_log)
 
 # For another version, draw the same plot but with `violin` geometry instead of 
 # `boxplot` geometry!
 # How does the logarithmic scale change the data presentation?
+price_color_vio <- ggplot(diamonds) +
+  geom_violin(
+    mapping = aes(x = color, y = price) 
+  ) + scale_y_log10()
 
+ print(price_color_vio)
 
 # Another interesting plot: draw a plot of the diamonds price (y) by carat (x), 
 # using a heatmap of 2d bins (geom_bin2d)
 # What happens when you make the x and y channels scale logarithmically?
+ p_c_heatmap <- ggplot(diamonds) +
+   geom_bin2d(
+     mapping = aes(x = carat, y = price)
+   ) + scale_y_log10() +  scale_x_log10()
 
+# print(p_c_heatmap)
 
 # Draw a scatter plot for the diamonds price (y) by carat (x). Color each point
 # by the clarity (Remember, this will take a while. Use a sample of the diamonds 
 # for faster results)
+ diamonds_sample <- sample_n(diamonds, 100)
+ scatter_price <- ggplot(diamonds_sample) +
+   geom_point(
+     mapping = aes(x = carat, y = price, color = clarity)
+   )
+ #print(scatter_price)
 
 
 # Change the color of the previous plot using a ColorBrewer scale of your choice. 
 # What looks nice?
-
+ scatter_price_2 <- ggplot(diamonds_sample) +
+   geom_point(
+     mapping = aes(x = carat, y = price, color = clarity)
+   ) + scale_color_brewer(palette = "Accent")
+# print(scatter_price_2)
 
 
 ## Coordinate Systems
@@ -66,20 +119,39 @@ library("ggplot2")
 # For best results, SET the `width` of the geometry to be 1 (fill plot, no space
 # between)
 # TIP: You can save the plot to a variable for easier modifications
+cut_bar <- ggplot(diamonds) +
+  geom_col(
+    mapping = aes(x = cut, y = price, fill = cut)
+  )
 
+# print(cut_bar)
 
 # Draw the same chart, but with the coordinate system flipped
+cut_bar2 <- ggplot(diamonds) +
+  geom_col(
+    mapping = aes(x = cut, y = price, fill = cut)
+  ) + coord_flip()
 
+# print(cut_bar2)
 
 # Draw the same chart, but in a polar coordinate system. It's a Coxcomb chart!
+cut_bar3 <- ggplot(diamonds_sample) +
+  geom_col(
+    mapping = aes(x = cut, y = price, fill = cut)
+  ) + coord_polar()
 
-
+# print(cut_bar3)
 
 ## Facets
 
 # Take the scatter plot of price by carat data (colored by clarity) and add 
 # _facets_ based on the diamond's `color`
+facets1 <- ggplot(diamonds) +
+  geom_point(
+    mapping = aes(x = carat, y = price)
+  ) + facet_wrap(~color)
 
+print(facets1)
 
 
 ## Saving Plots
@@ -87,4 +159,5 @@ library("ggplot2")
 # Use the `ggsave()` function to save the current (recent) plot to disk.
 # Name the output file "my-plot.png".
 # Make sure you've set the working directory!!
+ggsave("my-plot.png", facets1)
 

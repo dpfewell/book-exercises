@@ -1,0 +1,19 @@
+---
+title: Interstellar Review
+output: html_document
+---
+```{r setup, include = FALSE}
+source("exercise.R")
+movie_info <- get_movie_info()
+headline <- movie_info$headline
+summary <- movie_info$summary
+link <- movie_info$link
+
+```
+## Review: "`r headline`
+
+Below is the summary about Interstellar from the New York Times API:
+
+> `r summary`
+
+Follow [this link](`r link`) to read the full review.
